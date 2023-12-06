@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from "./App"
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Login from './Login';
+import Promisses from './Promisses';
 
 const router = createBrowserRouter(
   [
@@ -13,6 +14,10 @@ const router = createBrowserRouter(
     {
       path: '/Login',
       element: <Login/>
+    },
+    {
+      path: '/Promisses',
+      element: <Promisses/>
     }
   ]
 )

@@ -44,6 +44,8 @@ function Login() {
   function Autenticar(evento){
     evento.preventDefault();
 
+    //Isto é uma promise, pois não se sabe quanto tempo a api irá responder, por causa da latência do servidor, tamanho do código etc.
+    //Neste caso a promise é a requisição na api, os dados que serão enviados ou retornados, portanto é uma promessa que futuramente será resolvida (irá tratar os dados)
     fetch("https://api.escuelajs.co/api/v1/auth/login",//O fetch manda uma requisição para url digitada, futuramente será o link do banco de dados feitos por nós
     {method: "Post",//A requisição irá ser do método post, ou seja, por baixo dos panos (Existe 5 métodos de requisição)
     headers: {
@@ -55,15 +57,19 @@ function Login() {
         password: senha//No banco de dados estará campos chamados password que neles será procurado o que está dentro da variável senha
       }
     )})
-    .then((resposta) => resposta.json())//Então se tudo deu certo pega a resposta e transforma em JSON
-    .then((json) => {
-      if (json.statusCode === 401){//Se o número que o banco de dados retornar, ou seja, o statusCode for igual a 401, quer dizer que não foi encontrado esses dados no banco de dados, 401 é o número específico que diz que não está autorizado        setLogin(false);
-        setErro(true)//Se satisfazer a condição quer dizer que não foi autorizado, ou seja, o setErro será true, e dará erro ao fazer o login
+    //Encadeamento de then e catch
+    //Then = Então
+    .then((resposta) => resposta.json())//Primeiramente pega a resposta da api e transforma em json, para facilitar o tratamento dos dados
+    .then((json) => {//Depois pega o json
+      if (json.statusCode === 401){//O json terá vários tópicos de dados, e um deles será statusCode, se ele for igual a 401 quer dizer que não foi encontrado esses dados no banco de dados, 401 é o número específico que diz que não está autorizado
+        setErro(true)//Portanto o login não será liberado e setErro será true
       } else {
         setLogin(true);//Caso contrário, quer dizer que o login foi autorizado, logo o setLogin será true
       }
     })
+    //Já o catch será para qualquer tipo de erro, conexão com a internet etc
     .catch((erro) => { setErro(true)})
+    //O then executa tudo que deu certo na requisição e o catch executa tudo que deu errado
   }
 
   return (
